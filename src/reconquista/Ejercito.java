@@ -28,6 +28,7 @@ public class Ejercito {
 	}
 	
 	public void incorporarEjercito(int cantidad, String raza) {
+		this.unidades += cantidad;
 		for(int i = 0 ; i < cantidad ; i++) {
 			switch(raza) {
 			case "Nortaichian":
@@ -47,6 +48,7 @@ public class Ejercito {
 	}
 	
 	public void ordenarPostCombate(Raza tropa) {
+		this.unidades ++;
 		ejercito.add(tropa);
 	}
 	
@@ -61,6 +63,7 @@ public class Ejercito {
 	}
 	
 	public Raza obtenerCombatiente() {
+		this.unidades --;
 		return ejercito.removeFirst();
 	}
 
