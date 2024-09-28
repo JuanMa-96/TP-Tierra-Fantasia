@@ -20,16 +20,16 @@ public class Reralopes extends Raza {
 			return;
 		} else {
 			if (this.ataquesPotenciados > 0) {
-				System.out.println("Reralopes ataca con su catapulta y ocasiona el doble de daño.");
+				System.out.println("Reralopes ataca realizando " + 2 * this.daño +" con su catapulta y ocasiona el doble de daño.");
 				objetivo.recibirAtaque(2 * this.daño);
 				this.ataquesPotenciados--;
 			} else {
-				System.out.println("Reralopes ataca con su catapulta e inflinge daño básico.");
+				System.out.println("Reralopes ataca realizando " + this.daño + " con su catapulta e inflinge daño básico.");
 				objetivo.recibirAtaque(this.daño);
 			}
 			this.ataqueExitoso = true;
 		}
-
+		
 	}
 
 	@Override

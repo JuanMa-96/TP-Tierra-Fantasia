@@ -1,5 +1,6 @@
 package reconquista;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Ejercito {
@@ -8,6 +9,7 @@ public class Ejercito {
 	
 	public Ejercito(int cantidad, String raza) {
 		this.unidades = cantidad;
+		this.ejercito = new ArrayList <> ();
 		
 		for(int i = 0 ; i < cantidad ; i++) {
 			switch(raza) {
@@ -48,7 +50,6 @@ public class Ejercito {
 	}
 	
 	public void ordenarPostCombate(Raza tropa) {
-		this.unidades ++;
 		ejercito.add(tropa);
 	}
 	
@@ -63,8 +64,11 @@ public class Ejercito {
 	}
 	
 	public Raza obtenerCombatiente() {
-		this.unidades --;
 		return ejercito.removeFirst();
+	}
+	
+	public void reportarBaja() {
+		this.unidades--;
 	}
 
 }

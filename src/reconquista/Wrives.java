@@ -19,11 +19,11 @@ public class Wrives extends Raza {
 		}
 
 		if (this.contadorAtaque < 2) {
-			System.out.println("Wrives ataca al enemigo con Magia.");
+			System.out.println("Wrives ataca al enemigo con Magia realizando un daño de " + this.daño);
 			objetivo.recibirAtaque(this.daño);
 			this.contadorAtaque++;
 		} else {
-			System.out.println("Wrives ataca con el doble de su daño con Magia superior.");
+			System.out.println("Wrives ataca realizando " + 2 * this.daño +" (con el doble de su daño) con Magia superior.");
 			objetivo.recibirAtaque(2 * this.daño);
 			this.contadorAtaque = 0;
 		}
