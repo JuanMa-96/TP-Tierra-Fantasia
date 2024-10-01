@@ -16,10 +16,10 @@ public class Pueblo {
 		this.raza = nombreRaza;
 		this.nroPueblo = id;
 		this.relacion = relacion;
-		this.distancias = new ArrayList <> ();
+		this.distancias = new ArrayList<>();
 	}
 	
-	public int getPueblo() {
+	public int getNroPueblo() {
 		return this.nroPueblo;
 	}
 	
@@ -27,7 +27,7 @@ public class Pueblo {
 		return this.raza;
 	}
 	
-	public void getDistancias() {
+	public void printDistancias() {
 		for (int [] par: distancias) {
 			System.out.println("Destino: " + par[0] + ", " + "distancia: " + par[1] + " km.");
 		}
@@ -43,5 +43,17 @@ public class Pueblo {
 	
 	public void agregarDistancias(int destino, int km) {
 		this.distancias.add(new int [] {destino, km});
+	}
+
+	public List<int[]> getDistancias() {
+		return distancias;
+	}
+
+	public int getDestino(int pos) {
+		return this.getDistancias().get(pos)[0];
+	}
+
+	public int getDistancia(int pos) {
+		return this.getDistancias().get(pos)[1];
 	}
 }

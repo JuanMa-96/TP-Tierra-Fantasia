@@ -11,9 +11,9 @@ public class Mision {
 	private List<Pueblo> pueblos;
 	private int puebloInicial;
 	private int puebloFinal;
+	private int cantPueblos;
 
 	public Mision() {
-		
 	}
 	
 	public Mision(List<Pueblo> pueblos, int puebloInicial, int puebloFinal) {
@@ -25,18 +25,21 @@ public class Mision {
 	public void mostrarMision() {
 		System.out.println("Se ejecuta la mision:" + this.puebloInicial + "->" + this.puebloFinal);
 		System.out.println("Los pueblos registrados son: ");
-		for(Pueblo pueblo: this.pueblos) {
-			System.out.println(pueblo.getPueblo() + " " + pueblo.getRaza()+ " " +pueblo.getHabitantes() + " " + pueblo.getRelacion());
-			pueblo.getDistancias();
+		for(Pueblo pueblo : this.pueblos) {
+			if (pueblo != null) {
+				System.out.println(pueblo.getNroPueblo() + " " + pueblo.getRaza()+ " " +pueblo.getHabitantes() + " " + pueblo.getRelacion());
+				pueblo.printDistancias();
+			}
 		}
 	}
 
 	public void cargarDeArchivo(String rutaArchivo) throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(rutaArchivo));
-		int cantidadPueblos = Integer.parseInt(reader.readLine().trim());
+		cantPueblos = Integer.parseInt(reader.readLine().trim());
 
 		this.pueblos = new ArrayList<>();
-		for (int i = 0; i < cantidadPueblos; i++) {
+		this.pueblos.add(null); // El primero es nulo para tomar de indice el nro del pueblo
+		for (int i = 0; i < cantPueblos; i++) {
 			String[] datosPueblo = reader.readLine().split(" ");
 			int id = Integer.parseInt(datosPueblo[0]);
 			int habitantes = Integer.parseInt(datosPueblo[1]);
@@ -59,18 +62,32 @@ public class Mision {
 			int destino = Integer.parseInt(datosDistancia[1]);
 			int kilometros = Integer.parseInt(datosDistancia[2]);
 			
-			for(int i = 0; i < cantidadPueblos ; i++) {
-				if(pueblos.get(i).getPueblo() == origen) {
+			for(int i = 1; i < cantPueblos ; i++) {
+				if(pueblos.get(i).getNroPueblo() == origen) {
 					pueblos.get(i).agregarDistancias(destino, kilometros);
 				}
 			}
-			
 		}
-		
 		return;
 	}
 	
 	public Pueblo getPueblo(int id) {
 		return pueblos.get(id);
+	}
+
+	public List<Pueblo> getPueblos() {
+		return pueblos;
+	}
+
+	public int getPuebloInicial() {
+		return puebloInicial;
+	}
+
+	public int getPuebloFinal() {
+		return puebloFinal;
+	}
+
+	public int getCantPueblos() {
+		return cantPueblos;
 	}
 }

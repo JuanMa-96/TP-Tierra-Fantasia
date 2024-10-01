@@ -64,7 +64,7 @@ public class Ejercito {
 	}
 	
 	public Raza obtenerCombatiente() {
-		return ejercito.removeFirst();
+		return ejercito.remove(0);
 	}
 	
 	public void reportarBaja() {
