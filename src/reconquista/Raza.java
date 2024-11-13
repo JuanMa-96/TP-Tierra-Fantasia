@@ -17,5 +17,5 @@ public abstract class Raza {
 	public boolean estaVivo() {
 		return salud > 0;
 	}
-
+	public void setSalud(int salud) {this.salud = salud;}
 }
