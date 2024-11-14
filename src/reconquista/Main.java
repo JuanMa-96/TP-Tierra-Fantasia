@@ -7,9 +7,9 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		Mision mision = new Mision();
+		Archivo archivo = new Archivo();
 		try {
-			mision.cargarDeArchivo("TP-Tierra-Fantasia/resources/Mision_1.txt");
+			Mision mision = archivo.cargarDeArchivo("TP-Tierra-Fantasia/resources/Mision_1.txt");
 			mision.realizarMision();
 		} catch (IOException e) {
 			e.printStackTrace();
