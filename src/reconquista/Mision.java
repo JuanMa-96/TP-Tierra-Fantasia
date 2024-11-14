@@ -100,13 +100,13 @@ public class Mision {
 		System.out.println();
 		System.out.println("Camino mas corto");
 		System.out.println("----------------");
-		for (int i = 1; i < camino.size(); i++) {
-			System.out.println((i) + " -> " + (camino.get(i)));
+		for  (int numPueblo : camino) {
+			System.out.println((puebloInicial) + " -> " + (camino.get(numPueblo)));
 
 			Pueblo puebloPropio = getPueblo(puebloInicial);
 			Ejercito propio = new Ejercito(puebloPropio.getHabitantes(), puebloPropio.getRaza());
 
-			Pueblo puebloActual = getPueblo(i);
+			Pueblo puebloActual = getPueblo(numPueblo);
 
 			switch (puebloActual.getRelacion()) {
 				case "aliado":
