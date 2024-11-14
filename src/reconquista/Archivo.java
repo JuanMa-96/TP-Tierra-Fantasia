@@ -6,8 +6,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Archivo {
+    private Mision mision;
+    private Mapa mapa;
 
-    public Mision cargarDeArchivo(String rutaArchivo) throws IOException {
+    public Archivo(String rutaArchivo) throws IOException {
+        mapa = new Mapa();
+        cargarDeArchivo(rutaArchivo);
+    }
+
+    public void cargarDeArchivo(String rutaArchivo) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(rutaArchivo));
         int cantPueblos = Integer.parseInt(reader.readLine().trim());
 
@@ -27,7 +34,7 @@ public class Archivo {
         int puebloInicial = Integer.parseInt(inicialFinal[0]);
         int puebloFinal = Integer.parseInt(inicialFinal[1]);
 
-        /* Meter en grafo */
+        /* Se crea el mapa */
 
         String linea;
         while ((linea = reader.readLine()) != null) {
@@ -41,9 +48,8 @@ public class Archivo {
                     pueblos.get(i).agregarDistancias(destino, kilometros);
                 }
             }
-
         }
 
-        return new Mision(pueblos, puebloInicial, puebloFinal, cantPueblos);
+        mision = new Mision(pueblos, puebloInicial, puebloFinal);
     }
 }
