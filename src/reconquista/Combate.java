@@ -11,6 +11,10 @@ public class Combate {
     }
 
     public void combate() {
+        if(propio.informarUnidades() == 0 || enemigo.informarUnidades() == 0) {
+            return;
+        }
+
         Raza combatientePropio = this.propio.obtenerCombatiente();
         Raza combatienteEnemigo = this.enemigo.obtenerCombatiente();
 
