@@ -1,42 +1,45 @@
 package reconquista;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
 public class Mision {
-	private List<Pueblo> pueblos;
+	//private List<Pueblo> pueblos;
 	private int puebloInicial;
 	private int puebloFinal;
 	private int cantPueblos;
 
-	public Mision(List<Pueblo> pueblos, int puebloInicial, int puebloFinal, int cantPueblos ) {
-		this.pueblos = pueblos;
+	public Mision(int puebloInicial, int puebloFinal, int cantPueblos ) {
 		this.puebloInicial = puebloInicial;
 		this.puebloFinal = puebloFinal;
 		this.cantPueblos = cantPueblos;
 	}
-	
+
+	/*
 	public Mision(List<Pueblo> pueblos, int puebloInicial, int puebloFinal) {
 		this.pueblos = pueblos;
 		this.puebloInicial = puebloInicial;
 		this.puebloFinal = puebloFinal;
-	}
-	
+	} */
+
 	public void mostrarMision() {
-		System.out.println("Se ejecuta la mision:" + this.puebloInicial + "->" + this.puebloFinal);
-		System.out.println("Los pueblos registrados son: ");
-		for(Pueblo pueblo : this.pueblos) {
-			if (pueblo != null) {
-				System.out.println(pueblo.getNroPueblo() + " " + pueblo.getRaza()+ " " +pueblo.getHabitantes() + " " + pueblo.getRelacion());
-				pueblo.printDistancias();
-			}
+		// Obtener la instancia de Mapa
+		Mapa mapa = Mapa.getInstance();
+
+		System.out.println("Se ejecuta la misión: " + this.puebloInicial + " -> " + this.puebloFinal);
+		System.out.println("Los pueblos registrados son:");
+
+		// Iterar sobre todos los pueblos registrados en el mapa
+		for (Pueblo pueblo : mapa.getPueblos().values()) {
+			System.out.println(pueblo.getNroPueblo() + " " + pueblo.getRaza() + " " + pueblo.getHabitantes() + " " + pueblo.getRelacion());
+			pueblo.printDistancias(); // Mostrar las distancias de cada pueblo a sus pueblos conectados
 		}
 	}
-	
+
+
+	/*
 	public Pueblo getPueblo(int id) {
 		return pueblos.get(id);
 	}
@@ -44,7 +47,7 @@ public class Mision {
 	public List<Pueblo> getPueblos() {
 		return pueblos;
 	}
-
+	*/
 	public int getPuebloInicial() {
 		return puebloInicial;
 	}
@@ -58,45 +61,89 @@ public class Mision {
 	}
 
 	public void realizarMision() {
-		Dijkstra dij = new Dijkstra(getPueblos());
-		List<Integer> camino = dij.obtenerCaminoMasCorto(getPuebloInicial(), getPuebloFinal());
+		Dijkstra dijkstra = new Dijkstra();
+		ResultadoDijkstra resultado = dijkstra.dijkstra(puebloInicial);
 
-		if (camino.isEmpty()) {
-			System.out.println("No existe un camino entre " + getPuebloInicial() + " y " + getPuebloFinal());
+		int[] distancias = resultado.getDistancias();
+		int[] predecesores = resultado.getPredecesores();
+
+		if (distancias[puebloFinal] == Integer.MAX_VALUE) {
+			System.out.println("No existe un camino entre " + puebloInicial + " y " + puebloFinal);
 			return;
 		}
 
-		System.out.println("\nCamino mas corto");
+		System.out.println("\nCamino más corto:");
 		System.out.println("----------------");
 
+		// Reconstruir el camino más corto desde el vector de predecesores
+		List<Integer> camino = new ArrayList<>();
+		for (int at = puebloFinal; at != -1; at = predecesores[at]) {
+			camino.add(at);
+		}
+		Collections.reverse(camino); // Ordenar en el orden correcto del inicio al destino
 
-		int puebloInicial = getPuebloInicial();
-		for (int numPueblo : camino) {
-			System.out.println(puebloInicial + " -> " + numPueblo);
+		int diasTotales = 0; // Contador de días totales
 
-			Pueblo puebloPropio = getPueblo(puebloInicial);
-			Ejercito propio = new Ejercito(puebloPropio.getHabitantes(), puebloPropio.getRaza());
+		// Obtener la instancia del mapa
+		Mapa mapa = Mapa.getInstance();
 
-			Pueblo puebloActual = getPueblo(numPueblo);
+		// Inicializar el ejército en el pueblo inicial
+		Pueblo puebloPropio = mapa.obtenerPueblo(puebloInicial);
+		Ejercito propio = new Ejercito(puebloPropio.getHabitantes(), puebloPropio.getRaza());
 
-			switch (puebloActual.getRelacion()) {
+		// Recorrer el camino y ejecutar la misión en cada pueblo
+		for (int i = 0; i < camino.size() - 1; i++) {
+			int actualPuebloId = camino.get(i);
+			int siguientePuebloId = camino.get(i + 1);
+
+			Pueblo puebloActual = mapa.obtenerPueblo(actualPuebloId);
+			Pueblo puebloSiguiente = mapa.obtenerPueblo(siguientePuebloId);
+
+			int distancia = obtenerDistanciaEntrePueblos(mapa, actualPuebloId, siguientePuebloId); // Método para obtener la distancia
+			int diasDeViaje = (int) Math.ceil(distancia / 10.0); // Calcular los días necesarios para recorrer la distancia
+			diasTotales += diasDeViaje;
+
+			System.out.println("\nViajando desde " + actualPuebloId + " a " + siguientePuebloId + " (Distancia: " + distancia + " km, Días de viaje: " + diasDeViaje + ")");
+
+			switch (puebloSiguiente.getRelacion()) {
 				case "aliado":
-					System.out.println("\nEstas en un pueblo aliado, tu ejercito descansa y se incorporan "
-							+ (puebloActual.getHabitantes() / 2) + " de raza " + puebloActual.getRaza());
+					System.out.println("\nLlegaste a un pueblo aliado, tu ejército descansa y se incorporan "
+							+ (puebloSiguiente.getHabitantes() / 2) + " tropas de la raza " + puebloSiguiente.getRaza());
 					propio.descansarEjercito();
-					propio.incorporarEjercito(puebloActual.getHabitantes() / 2, puebloActual.getRaza());
+					propio.incorporarEjercito(puebloSiguiente.getHabitantes() / 2, puebloSiguiente.getRaza());
 					break;
+
 				case "enemigo":
-					System.out.println("\nEstas en un pueblo enemigo, tu ejercito entra en combate con las tropas "
-							+ puebloActual.getRaza() + " con un ejercito de " + puebloActual.getHabitantes());
-					Ejercito enemigo = new Ejercito(puebloActual.getHabitantes(), puebloActual.getRaza());
+					System.out.println("\nLlegaste a un pueblo enemigo. Tu ejército entra en combate con las tropas "
+							+ puebloSiguiente.getRaza() + " con un ejército de " + puebloSiguiente.getHabitantes() + " soldados.");
+					Ejercito enemigo = new Ejercito(puebloSiguiente.getHabitantes(), puebloSiguiente.getRaza());
 					Combate combate = new Combate(propio, enemigo);
 					combate.combate();
+					diasTotales++; // Cada combate añade un día
 					break;
 			}
 
-			// Actualizar el punto de partida al siguiente nodo en el camino
-			puebloInicial = numPueblo;
+			// Actualizar el punto de partida al siguiente pueblo en el camino
+			puebloInicial = siguientePuebloId;
 		}
+
+		// Resumen final
+		System.out.println("\nMisión completada:");
+		System.out.println("------------------");
+		System.out.println("Días totales: " + diasTotales);
+		System.out.println("Ejército restante: " + propio.informarUnidades() + " soldados.");
+		System.out.println("Estado final de la misión: " + (propio.informarUnidades() > 0 ? "Éxito" : "Derrota"));
 	}
+
+	// Método auxiliar para obtener la distancia entre dos pueblos
+	private int obtenerDistanciaEntrePueblos(Mapa mapa, int origen, int destino) {
+		List<Conexion> conexiones = mapa.obtenerConexiones(origen);
+		for (Conexion conexion : conexiones) {
+			if (conexion.getDestino() == destino) {
+				return conexion.getDistancia();
+			}
+		}
+		return Integer.MAX_VALUE; // Si no hay conexión, devolver un valor muy grande
+	}
+
 }

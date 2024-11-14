@@ -4,40 +4,28 @@ import java.util.*;
 
 public class Dijkstra {
     private int vertices;
+    private Map<Integer, List<Conexion>> listaAdyacencias;
 
-    private LinkedList<Arista>[] listaAdyacencias;
-
-    public Dijkstra(List<Pueblo> pueblos) {
-        vertices = pueblos.size();
-        listaAdyacencias = new LinkedList[vertices];
-        int nroPueblo = 1;
-        for(Pueblo p : pueblos) {
-            if (p != null) {
-                LinkedList<Arista> ll = new LinkedList<>();
-
-                for(int i = 0 ; i < p.getDistancias().size() ; i++) {
-                    Arista ar = new Arista(p.getDestino(i), p.getDistancia(i));
-                    ll.add(ar);
-                }
-                listaAdyacencias[nroPueblo] = ll;
-                nroPueblo++;
-            }
-        }
+    public Dijkstra() {
+        // Obtenemos la instancia única del mapa
+        Mapa mapa = Mapa.getInstance();
+        listaAdyacencias = mapa.getAdyacencias(); // Conexiones de cada pueblo
+        vertices = mapa.getPueblos().size(); // Número de pueblos (nodos)
     }
 
     static class Arista {
         int destino, peso;
 
-        public Arista(int destination, int weight) {
-            this.destino = destination;
-            this.peso = weight;
+        public Arista(int destino, int peso) {
+            this.destino = destino;
+            this.peso = peso;
         }
     }
 
     public ResultadoDijkstra dijkstra(int verticeInicial) {
-        int[] distancias = new int[vertices]; // Array para almacenar las distancias mínimas
-        boolean[] caminoMasCorto = new boolean[vertices]; // Array para saber si el vértice ya tiene su camino más corto determinado
-        int[] predecesores = new int[vertices]; // Array para almacenar los predecesores de cada nodo
+        int[] distancias = new int[vertices + 1]; // Array para almacenar las distancias mínimas
+        boolean[] caminoMasCorto = new boolean[vertices + 1]; // Array para saber si el vértice ya tiene su camino más corto determinado
+        int[] predecesores = new int[vertices + 1]; // Array para almacenar los predecesores de cada nodo
 
         Arrays.fill(distancias, Integer.MAX_VALUE); // Inicializa todas las distancias con un valor grande
         Arrays.fill(predecesores, -1); // Inicializamos los predecesores como -1 (sin predecesor)
@@ -58,16 +46,19 @@ public class Dijkstra {
                 // Marcar el vértice como procesado
                 caminoMasCorto[u] = true;
 
-                // Procesar los vecinos del vértice extraído
-                for (Arista arista : listaAdyacencias[u]) {
-                    int v = arista.destino;
-                    int peso = arista.peso;
+                // Obtener las conexiones (adyacencias) del vértice `u` desde el Mapa
+                List<Conexion> conexiones = listaAdyacencias.get(u);
+                if (conexiones != null) {
+                    for (Conexion conexion : conexiones) {
+                        int v = conexion.getDestino();
+                        int peso = conexion.getDistancia();
 
-                    // Si encontramos una ruta más corta al vértice v, actualizamos su distancia y el predecesor
-                    if (!caminoMasCorto[v] && distancias[u] + peso < distancias[v]) {
-                        distancias[v] = distancias[u] + peso;
-                        predecesores[v] = u;
-                        priorityQueue.add(new Arista(v, distancias[v]));
+                        // Si encontramos una ruta más corta al vértice `v`, actualizamos su distancia y el predecesor
+                        if (!caminoMasCorto[v] && distancias[u] + peso < distancias[v]) {
+                            distancias[v] = distancias[u] + peso;
+                            predecesores[v] = u;
+                            priorityQueue.add(new Arista(v, distancias[v]));
+                        }
                     }
                 }
             }
