@@ -7,8 +7,8 @@ import java.util.Map;
 
 public class Mapa {
     private static Mapa instanciaUnica;
-    private Map<Integer, Pueblo> pueblos; // Almacena los pueblos con sus IDs
-    private Map<Integer, List<Conexion>> adyacencias; // Almacena las conexiones para Dijkstra
+    private Map<Integer, Pueblo> pueblos;
+    private Map<Integer, List<Conexion>> adyacencias;
 
     private Mapa() {
         pueblos = new HashMap<>();
@@ -22,13 +22,11 @@ public class Mapa {
         return instanciaUnica;
     }
 
-    // Agregar un pueblo al mapa
     public void agregarPueblo(Pueblo pueblo) {
         pueblos.put(pueblo.getNroPueblo(), pueblo);
-        adyacencias.putIfAbsent(pueblo.getNroPueblo(), new ArrayList<>()); // Inicializa la lista de adyacencias
+        adyacencias.putIfAbsent(pueblo.getNroPueblo(), new ArrayList<>());
     }
 
-    // Agregar una conexión entre pueblos (para Dijkstra)
     public void agregarDistancia(int origen, int destino, int kilometros) {
         adyacencias.putIfAbsent(origen, new ArrayList<>());
         adyacencias.get(origen).add(new Conexion(destino, kilometros));
