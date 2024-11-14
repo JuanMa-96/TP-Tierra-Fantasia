@@ -6,11 +6,11 @@ import java.util.List;
 public class Ejercito {
 	private int unidades;
 	private List <Raza> ejercito;
-	
+
 	public Ejercito(int cantidad, String raza) {
 		this.unidades = cantidad;
 		this.ejercito = new ArrayList <> ();
-		
+
 		for(int i = 0 ; i < cantidad ; i++) {
 			switch(raza) {
 			case "Nortaichian":
@@ -28,7 +28,7 @@ public class Ejercito {
 			}
 		}
 	}
-	
+
 	public void incorporarEjercito(int cantidad, String raza) {
 		this.unidades += cantidad;
 		for(int i = 0 ; i < cantidad ; i++) {
@@ -48,25 +48,30 @@ public class Ejercito {
 			}
 		}
 	}
-	
+
+	public void incorporarEjercito(Raza guerrero) {
+		this.unidades += 1;
+		ejercito.add(0, guerrero);
+	}
+
 	public void ordenarPostCombate(Raza tropa) {
 		ejercito.add(tropa);
 	}
-	
+
 	public void descansarEjercito() {
 		for (Raza tropa: ejercito) {
 			tropa.descansar();
 		}
 	}
-	
+
 	public int informarUnidades() {
 		return this.unidades;
 	}
-	
+
 	public Raza obtenerCombatiente() {
 		return ejercito.remove(0);
 	}
-	
+
 	public void reportarBaja() {
 		this.unidades--;
 	}

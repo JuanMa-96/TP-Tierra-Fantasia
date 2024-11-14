@@ -1,0 +1,11 @@
+5
+1 90 Wrives propio
+2 35 Reralopes aliado
+3 55 Nortaichian aliado
+4 65 Radaiteran enemigo
+5 75 Wrives enemigo
+1 -> 5
+1 2 10
+2 3 8
+3 4 12
+4 5 6
