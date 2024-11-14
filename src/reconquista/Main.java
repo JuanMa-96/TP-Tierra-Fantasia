@@ -9,10 +9,12 @@ public class Main {
 
 		Mision mision = new Mision();
 		try {
-			mision.cargarDeArchivo("./resources/Mision_1.txt");
+			mision.cargarDeArchivo("TP-Tierra-Fantasia/resources/Mision_1.txt");
+			mision.realizarMision();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 	}
 
 }

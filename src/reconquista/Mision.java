@@ -93,7 +93,7 @@ public class Mision {
 		return cantPueblos;
 	}
 
-	public void RealizarMision () {
+	public void realizarMision () {
 		Dijkstra dij = new Dijkstra(getPueblos());
 		List<Integer> camino = dij.obtenerCaminoMasCorto(getPuebloInicial(), getPuebloFinal());
 
@@ -103,10 +103,10 @@ public class Mision {
 		for (int i = 1; i < camino.size(); i++) {
 			System.out.println((i) + " -> " + (camino.get(i)));
 
-			Pueblo puebloPropio = getPueblo(0);
+			Pueblo puebloPropio = getPueblo(puebloInicial);
 			Ejercito propio = new Ejercito(puebloPropio.getHabitantes(), puebloPropio.getRaza());
 
-			Pueblo puebloActual = getPueblo(2);
+			Pueblo puebloActual = getPueblo(i);
 
 			switch (puebloActual.getRelacion()) {
 				case "aliado":
